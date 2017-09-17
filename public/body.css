@@ -1,0 +1,16 @@
+body {
+  font-family: ProximaNovaLight, ProximaNovaReg, Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  display: flex;
+}
+
+#search {
+  margin: 0 auto;
+}
+
+.react-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 700px;
+}

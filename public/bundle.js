@@ -9789,6 +9789,13 @@ var Search = function (_React$Component) {
   }
 
   _createClass(Search, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      navigator.geolocation.getCurrentPosition(function (location) {
+        return console.log(location);
+      });
+    }
+  }, {
     key: 'handleSearch',
     value: function handleSearch() {
       var _this2 = this;
@@ -9869,7 +9876,7 @@ var Search = function (_React$Component) {
           );
         }
       } else {
-        if (this.state.fieldInput === '') {
+        if (this.state.fieldValue) {
           return _react2.default.createElement(
             'div',
             { className: 'no-doc-notice' },

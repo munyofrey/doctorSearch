@@ -21,6 +21,10 @@ class Search extends React.Component {
     this.nextResults = this.nextResults.bind(this);
   }
 
+  componentDidMount () {
+    navigator.geolocation.getCurrentPosition((location) => console.log(location));
+  }
+
   handleSearch () {
     let fieldValue = this.state.fieldValue;
     if (!this.searched) {
@@ -80,7 +84,7 @@ class Search extends React.Component {
               </div>;
       }
     } else {
-      if (this.state.fieldInput === '') {
+      if (this.state.fieldValue) {
         return <div className='no-doc-notice'>
                   No doctors match your search!
                 </div>;

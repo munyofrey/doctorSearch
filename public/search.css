@@ -1,39 +1,65 @@
-li {
-  list-style: none;
-  width: 700px;
+/* input field */
+input {
+  font-size: 20px;
+  padding: 5px 7px;
+}
 
+
+/* notices */
+.no-doc-notice {
+  text-align: center;
+  font-size: 24px;
+  background-color: #eee;
+  border-radius: 2px;
+  padding: 20px 0px;
+}
+
+
+/* for when there are results */
+
+li {
+  max-height: 40px;
+  list-style: none;
+  border-bottom: 1px solid #eee;
+  transition: max-height .33s ease-out;
+  overflow: hidden;
 }
 
 .doctor-header {
   display: flex;
   justify-content: space-between;
   padding: 10px 5px;
-  border-bottom: 1px solid #eee;
   font-size: 16px;
+  background-color: white;
 }
 
-li > p {
-  display: none;
-}
-
-li:hover > p {
-  display: block;
+/* doctor bio information */
+p {
+  background-color: #eee;
+  border-radius: 2px;
   padding: 10px 5px;
 }
 
-body {
-  font-family: ProximaNovaLight, ProximaNovaReg, Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-size: 12px;
+li:hover {
+  max-height: 200px;
+  transition: max-height .5s ease-in;
 }
 
 
+
+
+
+/* pagination buttons */
+
 .more-results {
+  margin-top: 25px;
   display: flex;
-  width: 300px;
+  width: 700px;
+  justify-content: space-around;
 }
 
 .more-results > div {
-  width: 100px;
+  width: 150px;
   padding: 10px 5px;
   border: 1px solid #eee;
   border-radius: 2px;
@@ -42,21 +68,9 @@ body {
 }
 
 .more-results > div:hover {
-  opacity: 90%;
+
 }
 
 .next-results {
 
-}
-
-
-#search {
-  margin: 0 auto;
-}
-
-.react-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 700px;
 }

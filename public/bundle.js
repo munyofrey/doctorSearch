@@ -9750,6 +9750,12 @@ var _reactDom = __webpack_require__(98);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
+var _search_box = __webpack_require__(184);
+
+var _search_box2 = _interopRequireDefault(_search_box);
+
+var _util = __webpack_require__(185);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -9768,65 +9774,125 @@ var Search = function (_React$Component) {
 
     _this.state = {
       doctors: [],
-      fieldValue: ''
+      fieldValue: '',
+      skip: 0
     };
+
+    _this.searched = false; // to handle backend api calls only happening every .5 seconds
 
     _this.inputUpdate = _this.inputUpdate.bind(_this);
     _this.handleFieldValue = _this.handleFieldValue.bind(_this);
+    _this.handleSearch = _this.handleSearch.bind(_this);
+    _this.prevResults = _this.prevResults.bind(_this);
+    _this.nextResults = _this.nextResults.bind(_this);
     return _this;
   }
 
   _createClass(Search, [{
-    key: 'handleFieldValue',
-    value: function handleFieldValue() {
+    key: 'handleSearch',
+    value: function handleSearch() {
       var _this2 = this;
 
       var fieldValue = this.state.fieldValue;
-      if (fieldValue === '') {
+      if (!this.searched) {
+        this.searched = true;
+        setTimeout(function () {
+          _this2.searched = false;
+        }, 500);
+        (0, _util.doctorSearch)(fieldValue, this.state.skip).then(function (data) {
+          return _this2.setState({ doctors: JSON.parse(data) });
+        });
+      }
+    }
+  }, {
+    key: 'handleFieldValue',
+    value: function handleFieldValue() {
+      if (this.state.fieldValue === '') {
         this.setState({ doctors: [] });
       } else {
-        $.ajax({
-          method: 'POST',
-          url: '/doctors',
-          data: {
-            name: fieldValue
-            // skip
-            // location
-          }
-        }).then(function (data) {
-          return _this2.setState({
-            doctors: JSON.parse(data) });
-        });
+        this.handleSearch();
       }
     }
   }, {
     key: 'inputUpdate',
     value: function inputUpdate(event) {
       event.preventDefault();
-      this.setState({ fieldValue: event.currentTarget.value }, this.handleFieldValue);
+      this.setState({
+        fieldValue: event.currentTarget.value,
+        skip: 0 }, this.handleFieldValue);
+    }
+  }, {
+    key: 'prevResults',
+    value: function prevResults(event) {
+      event.preventDefault();
+      var skip = this.state.skip - 10;
+      this.setState({ skip: skip }, this.handleSearch);
+    }
+  }, {
+    key: 'nextResults',
+    value: function nextResults(event) {
+      event.preventDefault();
+      var skip = this.state.skip + 10;
+      this.setState({ skip: skip }, this.handleSearch);
+    }
+  }, {
+    key: 'paginationCursor',
+    value: function paginationCursor() {
+      if (this.state.doctors.length > 0) {
+        if (this.state.skip === 0) {
+          return _react2.default.createElement(
+            'div',
+            { className: 'more-results' },
+            _react2.default.createElement(
+              'div',
+              { className: 'next-results',
+                onClick: this.nextResults },
+              'See more results!'
+            )
+          );
+        } else {
+          return _react2.default.createElement(
+            'div',
+            { className: 'more-results' },
+            _react2.default.createElement(
+              'div',
+              { className: 'previous-results',
+                onClick: this.prevResults },
+              'See previous results!'
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'next-results',
+                onClick: this.nextResults },
+              'See more results!'
+            )
+          );
+        }
+      } else {
+        if (this.state.fieldInput === '') {
+          return _react2.default.createElement(
+            'div',
+            { className: 'no-doc-notice' },
+            'No doctors match your search!'
+          );
+        } else {
+          return _react2.default.createElement(
+            'div',
+            { className: 'no-doc-notice' },
+            'Start typing to find a doctor!'
+          );
+        }
+      }
     }
   }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
-        null,
+        { className: 'react-body' },
         _react2.default.createElement('input', { onChange: this.inputUpdate, value: this.state.fieldValue }),
-        _react2.default.createElement(
-          'ul',
-          null,
-          this.state.doctors.map(function (profile) {
-            return _react2.default.createElement(
-              'li',
-              null,
-              ' ',
-              profile.first_name,
-              ' ',
-              profile.last_name,
-              ' '
-            );
-          })
-        )
+        _react2.default.createElement(_search_box2.default, { doctors: this.state.doctors }),
+        this.paginationCursor()
       );
     }
   }]);
@@ -22473,6 +22539,127 @@ var ReactDOMInvalidARIAHook = {
 
 module.exports = ReactDOMInvalidARIAHook;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 184 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(82);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(98);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SearchBox = function (_React$Component) {
+  _inherits(SearchBox, _React$Component);
+
+  function SearchBox(props) {
+    _classCallCheck(this, SearchBox);
+
+    return _possibleConstructorReturn(this, (SearchBox.__proto__ || Object.getPrototypeOf(SearchBox)).call(this, props));
+  }
+
+  _createClass(SearchBox, [{
+    key: 'render',
+    value: function render() {
+      var doctorBio = function doctorBio(doc) {
+        if (doc.profile.bio === '') {
+          return _react2.default.createElement(
+            'p',
+            { className: 'no-bio bio' },
+            'Sorry this doctor has no bio!'
+          );
+        } else {
+          return _react2.default.createElement(
+            'p',
+            { className: 'bio' },
+            doc.profile.bio
+          );
+        }
+      };
+
+      var gender = function gender(doc) {
+        return doc.profile.gender ? doc.profile.gender : 'unknown';
+      };
+
+      return _react2.default.createElement(
+        'ul',
+        null,
+        this.props.doctors.map(function (doctor) {
+          return _react2.default.createElement(
+            'li',
+            { key: '' + doctor.profile.bio + doctor.profile.first_name },
+            _react2.default.createElement(
+              'div',
+              { className: 'doctor-header' },
+              _react2.default.createElement(
+                'div',
+                null,
+                'Dr. ',
+                doctor.profile.first_name,
+                ' ',
+                doctor.profile.last_name,
+                ' '
+              ),
+              _react2.default.createElement(
+                'div',
+                null,
+                'Gender: ',
+                gender(doctor),
+                ' '
+              )
+            ),
+            doctorBio(doctor)
+          );
+        })
+      );
+    }
+  }]);
+
+  return SearchBox;
+}(_react2.default.Component);
+
+exports.default = SearchBox;
+
+/***/ }),
+/* 185 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var doctorSearch = exports.doctorSearch = function doctorSearch(name, skip, location) {
+  return $.ajax({
+    method: 'POST',
+    url: '/doctors',
+    data: {
+      name: name,
+      skip: skip,
+      location: location }
+  });
+};
 
 /***/ })
 /******/ ]);

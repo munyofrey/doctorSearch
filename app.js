@@ -22,17 +22,24 @@ app.post('/doctors', function (req, res) {
     let responseData = '';
 
     if (query) {
-      console.log(query);
+
       let url = 'https://api.betterdoctor.com/2016-03-01/doctors?'+ query;
 
       https.get(url, (response) => {
         response.on('data', dataChunk => {
+          console.log("data", dataChunk.toString());
           responseData += dataChunk.toString();
           });
 
         response.on('end', () => {
-          doctorList = JSON.parse(responseData).data.slice(0, 100).map(doc => (doc.profile));
-          res.write(JSON.stringify(doctorList), () => res.end());
+          console.log("responseData",responseData);
+          responseData = JSON.parse(responseData);
+          if (!responseData.meta.error){
+            doctorList = responseData.data;
+            res.write(JSON.stringify(doctorList), () => res.end());
+          } else {
+            // error handling for api call - send back error to frontend
+          }
         });
       });
   }});

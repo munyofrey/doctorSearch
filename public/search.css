@@ -1,0 +1,62 @@
+li {
+  list-style: none;
+  width: 700px;
+
+}
+
+.doctor-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 5px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+}
+
+li > p {
+  display: none;
+}
+
+li:hover > p {
+  display: block;
+  padding: 10px 5px;
+}
+
+body {
+  font-family: ProximaNovaLight, ProximaNovaReg, Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+}
+
+
+.more-results {
+  display: flex;
+  width: 300px;
+}
+
+.more-results > div {
+  width: 100px;
+  padding: 10px 5px;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  text-align: center;
+  background-color: red;
+}
+
+.more-results > div:hover {
+  opacity: 90%;
+}
+
+.next-results {
+
+}
+
+
+#search {
+  margin: 0 auto;
+}
+
+.react-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 700px;
+}

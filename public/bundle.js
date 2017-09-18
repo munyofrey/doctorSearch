@@ -22645,7 +22645,7 @@ var SearchBox = function (_React$Component) {
     key: 'render',
     value: function render() {
       var doctorBio = function doctorBio(doc) {
-        if (doc.profile.bio === '') {
+        if (doc.bio === '') {
           return _react2.default.createElement(
             'p',
             { className: 'no-bio bio' },
@@ -22655,13 +22655,13 @@ var SearchBox = function (_React$Component) {
           return _react2.default.createElement(
             'p',
             { className: 'bio' },
-            doc.profile.bio
+            doc.bio
           );
         }
       };
 
       var gender = function gender(doc) {
-        return doc.profile.gender ? doc.profile.gender : 'unknown';
+        return doc.gender ? doc.gender : 'unknown';
       };
 
       return _react2.default.createElement(
@@ -22670,7 +22670,7 @@ var SearchBox = function (_React$Component) {
         this.props.doctors.map(function (doctor, indx) {
           return _react2.default.createElement(
             'li',
-            { key: '' + doctor.profile.first_name + indx },
+            { key: '' + doctor.first_name + indx },
             _react2.default.createElement(
               'div',
               { className: 'doctor-header' },
@@ -22678,9 +22678,9 @@ var SearchBox = function (_React$Component) {
                 'div',
                 null,
                 'Dr. ',
-                doctor.profile.first_name,
+                doctor.first_name,
                 ' ',
-                doctor.profile.last_name,
+                doctor.last_name,
                 ' '
               ),
               _react2.default.createElement(

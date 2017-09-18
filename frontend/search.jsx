@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import SearchBox from './search_box';
 import { doctorSearch } from './util';
 
@@ -33,7 +32,6 @@ class Search extends React.Component {
 
   }
 
-
   handleSearch () {
     let fieldValue = this.state.fieldValue;
     if (!this.state.pending) {
@@ -47,13 +45,12 @@ class Search extends React.Component {
      }
   }
 
-
     callWithCurrentInput (oldInput) {
       return () => {
         // after .5 seconds from our last call to the backend, we check to see if the
         // user has typed anything. If they have we check if the field is blank or not
         // and make an updated call if needed.
-                this.setState({pending: false}, () => {
+                this.setState({ pending: false }, () => {
                   if (oldInput !== this.state.fieldValue) {
                     this.handleFieldValue();
                   }
@@ -69,7 +66,7 @@ class Search extends React.Component {
       if (this.state.fieldValue === '') {
         this.setState({ doctors: [] });
       } else {
-        this.setState({doctors: JSON.parse(data)});
+        this.setState({ doctors: JSON.parse(data) });
       }
     }
 
@@ -85,8 +82,9 @@ class Search extends React.Component {
   inputUpdate (event) {
     event.preventDefault();
     this.setState({
-              fieldValue: event.currentTarget.value,
-              skip: 0 }, this.handleFieldValue);
+                    fieldValue: event.currentTarget.value,
+                    skip: 0
+                  }, this.handleFieldValue);
   }
 
   prevResults (event) {
@@ -111,7 +109,6 @@ class Search extends React.Component {
                   Fetching updated list!
               </div>;
     }
-
 
     if (this.state.doctors.length > 0) {
       // this if block handles pagination for the search field
@@ -155,15 +152,12 @@ class Search extends React.Component {
 
   render () {
     return <div className='react-body'>
-            <input onChange={this.inputUpdate} value={this.state.fieldValue} />
-            <SearchBox doctors={this.state.doctors} />
-            {this.paginationCursor()}
+            <input onChange={ this.inputUpdate }
+                   value={ this.state.fieldValue } />
+            <SearchBox doctors={ this.state.doctors } />
+            { this.paginationCursor() }
           </div>;
   }
 }
 
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(<Search />, document.getElementById('search'));
-});
+export default Search;

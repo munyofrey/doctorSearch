@@ -63,9 +63,9 @@ app.post('/doctors', function (req, res) {
   }});
 });
 
-app.listen(3000, function () {
+const server = app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
 
-
-// TODO: add response for if responseData has an error or there isn't a query 
+module.exports = server;
+// TODO: add response for if responseData has an error or there isn't a query

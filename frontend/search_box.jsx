@@ -21,8 +21,8 @@ class SearchBox extends React.Component {
 
     const gender = doc => doc.profile.gender ? doc.profile.gender : 'unknown';
 
-    return <ul>{ this.props.doctors.map(doctor => {
-                return <li key={`${doctor.profile.bio}${doctor.profile.first_name}`}>
+    return <ul>{ this.props.doctors.map((doctor, indx) => {
+                return <li key={`${doctor.profile.first_name}${indx}`}>
                  <div className='doctor-header'>
                    <div>Dr. { doctor.profile.first_name } { doctor.profile.last_name } </div>
                    <div>Gender: { gender(doctor) } </div>

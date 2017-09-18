@@ -9775,14 +9775,17 @@ var Search = function (_React$Component) {
     _this.state = {
       doctors: [],
       fieldValue: '',
-      skip: 0
+      skip: 0,
+      pending: false // to handle backend api calls only happening every .5 seconds
     };
 
-    _this.searched = false; // to handle backend api calls only happening every .5 seconds
+    _this.location = ""; // if a user does not allow their location to be shared, will send back empty string
 
+    _this.callWithCurrentInput = _this.callWithCurrentInput.bind(_this);
     _this.inputUpdate = _this.inputUpdate.bind(_this);
     _this.handleFieldValue = _this.handleFieldValue.bind(_this);
     _this.handleSearch = _this.handleSearch.bind(_this);
+    _this.handleReturnValues = _this.handleReturnValues.bind(_this);
     _this.prevResults = _this.prevResults.bind(_this);
     _this.nextResults = _this.nextResults.bind(_this);
     return _this;
@@ -9791,29 +9794,63 @@ var Search = function (_React$Component) {
   _createClass(Search, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      var _this2 = this;
+
       navigator.geolocation.getCurrentPosition(function (location) {
-        return console.log(location);
+        var lat = location.coords.latitude;
+        var long = location.coords.longitude;
+        _this2.location = lat + ',' + long + ',100';
       });
     }
   }, {
     key: 'handleSearch',
     value: function handleSearch() {
-      var _this2 = this;
+      var _this3 = this;
 
       var fieldValue = this.state.fieldValue;
-      if (!this.searched) {
-        this.searched = true;
-        setTimeout(function () {
-          _this2.searched = false;
-        }, 500);
-        (0, _util.doctorSearch)(fieldValue, this.state.skip).then(function (data) {
-          return _this2.setState({ doctors: JSON.parse(data) });
+      if (!this.state.pending) {
+        this.setState({ pending: true }, function () {
+          // the BetterDoctor API allows for one request per .5s, by setting a
+          // pending portion of state and using setTimeout we onle hit our backend
+          // every .5 seconds
+          setTimeout(_this3.callWithCurrentInput(fieldValue).bind(_this3), 500);
+          (0, _util.doctorSearch)(fieldValue, _this3.state.skip, _this3.location).then(_this3.handleReturnValues);
         });
+      }
+    }
+  }, {
+    key: 'callWithCurrentInput',
+    value: function callWithCurrentInput(oldInput) {
+      var _this4 = this;
+
+      return function () {
+        // after .5 seconds from our last call to the backend, we check to see if the
+        // user has typed anything. If they have we check if the field is blank or not
+        // and make an updated call if needed.
+        _this4.setState({ pending: false }, function () {
+          if (oldInput !== _this4.state.fieldValue) {
+            _this4.handleFieldValue();
+          }
+        });
+      };
+    }
+  }, {
+    key: 'handleReturnValues',
+    value: function handleReturnValues(data) {
+      // since we have a delay between hitting the backend and typing we
+      // may have hit 'handleReturnValues' before we get old doctor queries back
+      // to account for this we double check that the field value still has some
+      // information in it
+      if (this.state.fieldValue === '') {
+        this.setState({ doctors: [] });
+      } else {
+        this.setState({ doctors: JSON.parse(data) });
       }
     }
   }, {
     key: 'handleFieldValue',
     value: function handleFieldValue() {
+      // we don't want to hit the backend if a user has deleted all of their input
       if (this.state.fieldValue === '') {
         this.setState({ doctors: [] });
       } else {
@@ -9845,8 +9882,22 @@ var Search = function (_React$Component) {
   }, {
     key: 'paginationCursor',
     value: function paginationCursor() {
+      if (this.state.pending) {
+        // if we are currently waiting for a response we should let the user
+        // know somehow, since there is such a delay it is nice to still allow some
+        // results to show - this tells the user new information is coming while still
+        // showing the past results (if there are any)
+        return _react2.default.createElement(
+          'div',
+          { className: 'no-doc-notice' },
+          'Fetching updated list!'
+        );
+      }
+
       if (this.state.doctors.length > 0) {
+        // this if block handles pagination for the search field
         if (this.state.skip === 0) {
+          // in this case the user is on the first page of results
           return _react2.default.createElement(
             'div',
             { className: 'more-results' },
@@ -9858,6 +9909,8 @@ var Search = function (_React$Component) {
             )
           );
         } else {
+          // in this case the user is on a later page of results,
+          // they should be able to see earlier and later results
           return _react2.default.createElement(
             'div',
             { className: 'more-results' },
@@ -9876,13 +9929,16 @@ var Search = function (_React$Component) {
           );
         }
       } else {
-        if (this.state.fieldValue) {
+        if (this.state.fieldValue && !this.state.pending) {
+          // if a user has typed information and we have gotten an empty response
+          // then we want to let them know there aren't any doctors that match
           return _react2.default.createElement(
             'div',
             { className: 'no-doc-notice' },
             'No doctors match your search!'
           );
         } else {
+          // in this situation there in no input in the search bar
           return _react2.default.createElement(
             'div',
             { className: 'no-doc-notice' },
@@ -22611,10 +22667,10 @@ var SearchBox = function (_React$Component) {
       return _react2.default.createElement(
         'ul',
         null,
-        this.props.doctors.map(function (doctor) {
+        this.props.doctors.map(function (doctor, indx) {
           return _react2.default.createElement(
             'li',
-            { key: '' + doctor.profile.bio + doctor.profile.first_name },
+            { key: '' + doctor.profile.first_name + indx },
             _react2.default.createElement(
               'div',
               { className: 'doctor-header' },

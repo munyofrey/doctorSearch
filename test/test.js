@@ -46,7 +46,6 @@ describe('backend server', function () {
   });
 
   it('post to "/doctors" works when no query is passed', function testRoot(done) {
-
     request(server)
       .post('/doctors')
       .expect('Content-Type', /html/)

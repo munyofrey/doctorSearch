@@ -48,7 +48,6 @@ describe('search item', () => {
                bio: "Not a trained doctor"
              };
     props =  { doctor };
-    console.log(props2);
     const searchItemWrapper = shallow(<SearchItem {...props} />);
 
     const gender = searchItemWrapper.find('.gender');

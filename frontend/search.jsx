@@ -1,6 +1,6 @@
 import React from 'react';
 import SearchItem from './search_item';
-import { doctorSearch } from './util';
+import * as util from './util';
 
 class Search extends React.Component {
   constructor () {
@@ -40,35 +40,35 @@ class Search extends React.Component {
         // pending portion of state and using setTimeout we onle hit our backend
         // every .5 seconds
         setTimeout(this.callWithCurrentInput(fieldValue).bind(this), 500);
-        doctorSearch(fieldValue, this.state.skip, this.location).then(this.handleReturnValues);
+        util.doctorSearch(fieldValue, this.state.skip, this.location).then(this.handleReturnValues);
       });
      }
   }
 
-    callWithCurrentInput (oldInput) {
-      return () => {
-        // after .5 seconds from our last call to the backend, we check to see if the
-        // user has typed anything. If they have we check if the field is blank or not
-        // and make an updated call if needed.
-                this.setState({ pending: false }, () => {
-                  if (oldInput !== this.state.fieldValue) {
-                    this.handleFieldValue();
-                  }
-                });
-              };
-    }
+  callWithCurrentInput (oldInput) {
+    return () => {
+      // after .5 seconds from our last call to the backend, we check to see if the
+      // user has typed anything. If they have we check if the field is blank or not
+      // and make an updated call if needed.
+              this.setState({ pending: false }, () => {
+                if (oldInput !== this.state.fieldValue) {
+                  this.handleFieldValue();
+                }
+              });
+            };
+  }
 
-    handleReturnValues (data) {
-      // since we have a delay between hitting the backend and typing we
-      // may have hit 'handleReturnValues' before we get old doctor queries back
-      // to account for this we double check that the field value still has some
-      // information in it
-      if (this.state.fieldValue === '') {
-        this.setState({ doctors: [] });
-      } else {
-        this.setState({ doctors: JSON.parse(data) });
-      }
+  handleReturnValues (data) {
+    // since we have a delay between hitting the backend and typing we
+    // may have hit 'handleReturnValues' before we get old doctor queries back
+    // to account for this we double check that the field value still has some
+    // information in it
+    if (this.state.fieldValue === '') {
+      this.setState({ doctors: [] });
+    } else {
+      this.setState({ doctors: JSON.parse(data) });
     }
+  }
 
   handleFieldValue () {
     // we don't want to hit the backend if a user has deleted all of their input
@@ -88,13 +88,11 @@ class Search extends React.Component {
   }
 
   prevResults (event) {
-    event.preventDefault();
     let skip = this.state.skip - 10;
     this.setState({ skip }, this.handleSearch);
   }
 
   nextResults (event) {
-    event.preventDefault();
     let skip = this.state.skip + 10;
     this.setState({ skip }, this.handleSearch);
   }
@@ -157,8 +155,8 @@ class Search extends React.Component {
  // we map over the doctors and create a list element for each one
  // we keep track of the index of each doctor to insure we get a unique
  // key prop for each li
-            <ul>{ this.state.doctors.map((doctor, indx) => (
-                <Searchitem key={ `${doctor.first_name}${indx}` }
+            <ul className='doclist' >{ this.state.doctors.map((doctor, indx) => (
+                <SearchItem key={ `${doctor.first_name}${indx}` }
                           doctors={ this.state.doctors } />
            ))}</ul>
             { this.paginationCursor() }

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
-    "test": "jest"
+    "test": "mocha"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +26,8 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "jest": "^15.1.1",
+    "jest-cli": "^21.1.0",
+    "jquery": "^3.2.1",
     "mocha": "^3.5.3",
     "react-test-renderer": "^15.6.1",
     "supertest": "^3.0.0"

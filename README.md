@@ -8,8 +8,7 @@ will need to create a `.env` file in the root directory to store your API user k
 Your `.env` file should look like this
 
 ```text
-DOCTOR_KEY=ba74c7c89d3fcf50275ed6570bc66aaa
-
+DOCTOR_KEY=yourUserKey
 ```
 
 navigate into the project directory and run
@@ -18,4 +17,23 @@ navigate into the project directory and run
 $ npm install
 $ webpack
 $ npm start
+```
+in your browser navigate to localhost:3000 and test it out!
+
+## Testing
+
+`Mocha` and `Jest` are utilized to test this application. Mocha is used to test
+the backend. To run the mocha test run
+
+```shell
+$ npm test
+```
+
+The Jest tests need to be run separately, run the follow 4 commands
+
+```shell
+$ jest frontend/__tests__/doctorSearch-test.js
+$ jest frontend/__tests__/util-test.js
+$ jest frontend/__tests__/search-test.js
+$ jest frontend/__tests__/search_item-test.js
 ```

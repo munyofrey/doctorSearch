@@ -68,4 +68,3 @@ const server = app.listen(3000, function () {
 });
 
 module.exports = server;
-// TODO: add response for if responseData has an error or there isn't a query

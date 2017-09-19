@@ -25,31 +25,4 @@ describe('backend server', function () {
       .expect(404, done);
   });
 
-  it('post to "/doctors" works with location', function testRoot(done) {
-    query = { name: 'Andr',
-              skip: 0,
-              location: "37.773,-122.413,100"};
-    request(server)
-      .post('/doctors')
-      .send(query)
-      .expect('Content-Type', /json/, done);
-  });
-
-  it('post to "/doctors" works without location', function testRoot(done) {
-    query = { name: 'Andr',
-              skip: 0,
-              location: ""};
-    request(server)
-      .post('/doctors')
-      .send(query)
-      .expect('Content-Type', /json/, done);
-  });
-
-  it('post to "/doctors" works when no query is passed', function testRoot(done) {
-    request(server)
-      .post('/doctors')
-      .expect('Content-Type', /html/)
-      .expect(200, done);
-  });
-
 });

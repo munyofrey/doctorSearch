@@ -23,7 +23,7 @@ You can now navigate to localhost:3000 in your browser and test it out!
 ## Testing
 
 `Mocha` and `Jest` are utilized to test this application. Mocha is used to test
-the backend. To run the mocha test run
+the backend. To run the mocha tests run
 
 ```shell
 $ npm test
@@ -49,6 +49,6 @@ the expected information.
 There are also few improvements to round out the testing in this application, first
 `frontend/__tests__/search-test.js` does not currently test the updating of the
 doctor list after typing in the input field, or the change of the input field.
-Due to the timing of external API calls, it was difficult to test proper responses,
-since good testing practices state to "not mock what you don't own" I would like to
+Also, due to the timing of external API calls, it was difficult to test proper responses,
+since good testing practices state to "not mock what you don't own", I would like to
 spend some time learning how to properly test responses that rely on external API calls.

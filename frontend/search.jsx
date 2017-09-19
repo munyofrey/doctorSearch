@@ -52,7 +52,7 @@ class Search extends React.Component {
       // and make an updated call if needed.
               this.setState({ pending: false }, () => {
                 if (oldInput !== this.state.fieldValue) {
-                  this.handleFieldValue();
+                  this.setState({ skip: 0 }, this.handleFieldValue);
                 }
               });
             };
@@ -149,15 +149,15 @@ class Search extends React.Component {
   }
 
   render () {
+    // we map over the doctors and create a list element for each one
+    // we keep track of the index of each doctor to insure we get a unique
+    // key prop for each li
     return <div className='react-body'>
             <input onChange={ this.inputUpdate }
                    value={ this.state.fieldValue } />
- // we map over the doctors and create a list element for each one
- // we keep track of the index of each doctor to insure we get a unique
- // key prop for each li
             <ul className='doclist' >{ this.state.doctors.map((doctor, indx) => (
                 <SearchItem key={ `${doctor.first_name}${indx}` }
-                          doctors={ this.state.doctors } />
+                            doctor={ doctor } />
            ))}</ul>
             { this.paginationCursor() }
           </div>;

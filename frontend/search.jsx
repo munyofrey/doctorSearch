@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchBox from './search_box';
+import SearchItem from './search_item';
 import { doctorSearch } from './util';
 
 class Search extends React.Component {
@@ -154,7 +154,13 @@ class Search extends React.Component {
     return <div className='react-body'>
             <input onChange={ this.inputUpdate }
                    value={ this.state.fieldValue } />
-            <SearchBox doctors={ this.state.doctors } />
+ // we map over the doctors and create a list element for each one
+ // we keep track of the index of each doctor to insure we get a unique
+ // key prop for each li
+            <ul>{ this.state.doctors.map((doctor, indx) => (
+                <Searchitem key={ `${doctor.first_name}${indx}` }
+                          doctors={ this.state.doctors } />
+           ))}</ul>
             { this.paginationCursor() }
           </div>;
   }
